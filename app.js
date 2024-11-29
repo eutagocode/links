@@ -3,6 +3,13 @@ import mongoose from "mongoose";
 const app = express();
 const PORT = 3000;
 
+mongoose.connect("mongodb://localhost/newlinks");
+
+const db = mongoose.connection;
+
+db.on("error", () => console.log("houve um erro"));
+db.once("open", () => console.log("Banco carregado!"));
+
 const linkSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: String,
@@ -12,26 +19,15 @@ const linkSchema = new mongoose.Schema({
 
 const Link = mongoose.model("Link", linkSchema);
 
-const link = new Link({
-    title: "Instagram",
-    description: "Link para o instagram",
-    url: "https://www.instagram.com/eutago/",
+app.get("/:title", async (req, res) => {
+    const title = req.params.title;
+    try {
+        const doc = await Link.findOne({ title });
+        res.redirect(doc.url);
+    } catch (error) {
+        res.send(error);
+    }
 });
-
-link.save()
-    .then((doc) => {
-        console.log(doc);
-    })
-    .catch((error) => {
-        console.error(error);
-    });
-
-mongoose.connect("mongodb://localhost/newlinks");
-
-const db = mongoose.connection;
-
-db.on("error", () => console.log("houve um erro"));
-db.once("open", () => console.log(db));
 
 app.get("/", (req, res) => {
     res.send("Hello World!");

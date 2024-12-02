@@ -6,12 +6,30 @@
         <title>Links</title>
     </head>
     <body>
+        <h1>Links</h1>
+        <a href="/add">Adicionar Link</a>
         <%for(let link of links) {%>
         <div id="<%=link._id%>">
             <h2><%=link.title%></h2>
             <p><%=link.description%></p>
             <p><%=link.url%></p>
+            <button onclick="deleteLink('<%=link._id%>')"">Delete</button>
         </div>
         <%}%>
+        <script>
+            async function deleteLink(id) {
+                const response = await fetch(`/${id}`, { method: "delete" });
+                if (response.status == 200) {
+
+                    const linkId = await response.text()
+                    console.log(linkId)
+                    document.getElementById(linkId).remove()
+                } else {
+                    const error = await response.json()
+                    console.log(error.message)
+                    alert(error.message)
+                }
+            }
+        </script>
     </body>
 </html>

@@ -1,6 +1,6 @@
 import Link from "../models/Link.js";
 
-const redirect = async (req, res) => {
+const redirectPage = async (req, res) => {
     const title = req.params.title;
     try {
         const doc = await Link.findOne({ title });
@@ -70,11 +70,11 @@ const editLink = async (req, res) => {
     }
 
     try {
-        const doc = await Link.findByIdAndUpdate(id);
+        await Link.findByIdAndUpdate(id);
         res.redirect("/");
     } catch (error) {
         res.render("edit", { error, body: req.body });
     }
 };
 
-export { redirect, createLink, allLinks, deleteLink, loadLink, editLink };
+export { redirectPage, createLink, allLinks, deleteLink, loadLink, editLink };

@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    redirect,
+    redirectPage,
     createLink,
     allLinks,
     deleteLink,
@@ -17,7 +17,7 @@ router.get("/add", (req, res) => {
 
 router.get("/edit/:id", loadLink);
 
-router.get("/:title", redirect);
+router.get("/:title", redirectPage);
 
 router.post("/", express.urlencoded({ extended: true }), createLink);
 

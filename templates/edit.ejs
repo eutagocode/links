@@ -7,9 +7,10 @@
     </head>
     <body>
         <h1>Edit Link</h1>
-        <form action="/edit/<%=body.id%>" method="put">
+        <form>
             <input
                 class="field"
+                id="input-title"
                 type="text"
                 name="title"
                 placeholder="Title"
@@ -18,6 +19,7 @@
             />
             <input
                 class="field"
+                id="input-desc"
                 type="text"
                 name="description"
                 placeholder="Description"
@@ -26,17 +28,54 @@
             />
             <input
                 class="field"
+                id="input-url"
                 type="text"
                 name="url"
                 placeholder="Url"
                 value="<%=body.url%>"
                 required
             />
-            <button>Editar</button>
+            <input
+                type="text"
+                name="id"
+                id="input-id"
+                value="<%=body._id%>"
+                hidden
+            />
+            <button type="button" onclick="editLink('<%=body._id%>')">
+                Editar
+            </button>
         </form>
 
         <%if (error) {%>
         <h3><%=error.message%></h3>
         <%}%>
+        <script>
+            const editLink = async (id) => {
+                const inputId = document.getElementById("input-id");
+                const inputTitle = document.getElementById("input-title");
+                const inputDesc = document.getElementById("input-desc");
+                const inputUrl = document.getElementById("input-url");
+
+                const link = new URLSearchParams({
+                    id: inputId.value,
+                    title: inputTitle.value,
+                    description: inputDesc.value,
+                    url: inputUrl.value,
+                });
+
+                const response = await fetch("/edit", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: link.toString(),
+                });
+
+                const data = await response.json();
+
+                window.location.href = data.redirect;
+            };
+        </script>
     </body>
 </html>

@@ -1,13 +1,13 @@
 import Link from "../models/Link.js";
 
-const redirectPage = async (req, res) => {
+const redirectPage = async (req, res, next) => {
     const title = req.params.title;
     try {
         const doc = await Link.findOne({ title });
         if (doc) {
             res.redirect(doc.url);
         } else {
-            res.send("teste");
+            next();
         }
     } catch (error) {
         res.send(error);
@@ -47,34 +47,32 @@ const deleteLink = async (req, res) => {
     }
 };
 
-const loadLink = async (req, res) => {
-    let id = req.params.id;
-
-    try {
-        const doc = await Link.findById(id);
-        res.render("edit", { body: doc });
-    } catch (error) {
-        res.status(404).send(error);
-    }
-};
-
 const editLink = async (req, res) => {
-    let doc = {};
-    doc.title = req.body.title;
-    doc.description = req.body.description;
-    doc.url = req.body.url;
-    let id = req.params.id;
+    let id = req.body.id;
 
-    if (!id) {
-        id = req.body.id;
-    }
+    let link = {
+        title: req.body.title,
+        description: req.body.description,
+        url: req.body.url,
+    };
 
     try {
-        await Link.findByIdAndUpdate(id);
-        res.redirect("/");
+        await Link.updateOne({ _id: id }, link);
+        res.json({ redirect: "/" });
     } catch (error) {
         res.render("edit", { error, body: req.body });
     }
 };
 
-export { redirectPage, createLink, allLinks, deleteLink, loadLink, editLink };
+const loadLink = async (req, res) => {
+    let id = req.params.id;
+
+    try {
+        const doc = await Link.findById(id);
+        res.render("edit", { error: false, body: doc });
+    } catch (error) {
+        res.status(404).send(error);
+    }
+};
+
+export { redirectPage, createLink, allLinks, deleteLink, editLink, loadLink };

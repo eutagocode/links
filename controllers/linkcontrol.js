@@ -2,8 +2,10 @@ import Link from "../models/Link.js";
 
 const redirectPage = async (req, res, next) => {
     const title = req.params.title;
+
     try {
-        const doc = await Link.updateOne({ title }, { $inc: { click: 1 } });
+        const doc = await Link.findOne({ title });
+        await Link.updateOne({ title }, { $inc: { click: 1 } });
         if (doc) {
             res.redirect(doc.url);
         } else {

@@ -12,10 +12,10 @@ const router = express.Router();
 router.get("/", allLinks);
 
 router.get("/add", (req, res) => {
-    res.render("index", { error: false, body: {} });
+    res.render("add", { error: false, body: {} });
 });
 
-router.get("/:title", redirectPage);
+router.get("/:title", express.json(), redirectPage);
 
 router.post("/", express.urlencoded({ extended: true }), createLink);
 

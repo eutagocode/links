@@ -4,8 +4,8 @@ import {
     createLink,
     allLinks,
     deleteLink,
-    loadLink,
     editLink,
+    loadLink,
 } from "../controllers/linkcontrol.js";
 const router = express.Router();
 
@@ -15,13 +15,13 @@ router.get("/add", (req, res) => {
     res.render("index", { error: false, body: {} });
 });
 
-router.get("/edit/:id", loadLink);
-
 router.get("/:title", redirectPage);
 
 router.post("/", express.urlencoded({ extended: true }), createLink);
 
-router.put("/edit/:id", express.urlencoded({ extended: true }), editLink);
+router.get("/edit/:id", express.json(), loadLink);
+
+router.put("/edit", express.urlencoded({ extended: true }), editLink);
 
 router.delete("/:id", deleteLink);
 

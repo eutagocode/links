@@ -3,7 +3,7 @@ import Link from "../models/Link.js";
 const redirectPage = async (req, res, next) => {
     const title = req.params.title;
     try {
-        const doc = await Link.findOne({ title });
+        const doc = await Link.updateOne({ title }, { $inc: { click: 1 } });
         if (doc) {
             res.redirect(doc.url);
         } else {
@@ -21,7 +21,7 @@ const createLink = async (req, res) => {
         await doc.save();
         res.redirect("/");
     } catch (error) {
-        res.render("index", { error, body: req.body });
+        res.render("add", { error, body: req.body });
     }
 };
 
